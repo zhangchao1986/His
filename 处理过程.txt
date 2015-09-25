@@ -1,0 +1,66 @@
+永城茴村卫生院
+问题描述：门诊医生的入院通知单不能打印，点保存后提示保存成功自动关闭，无法修改.
+王伟强：修改后局部更新到公司云平台 9999上
+
+医生诊台--基本信息Tabs0	 onclick="javascript:MSwitchTab(0);"
+if (index == 0) {
+	url = baseUrl + "/doctor/bus/doctorindex/baseMessage.do?regiid="
+	+ regiid;
+
+基本信息Tabs0
+http://127.0.0.1:7001/His/doctor/bus/doctorindex/baseMessage.do?regiid=4998757
+
+点击：入院通知单
+http://127.0.0.1:7001/His/patiinfo/rytzd.do?&REGIID=4998757&NAME=%25E9%25B1%25BC%25E5%25B9%25BC%25E8%2596%2587&SEX=2&BIRTH_DATE=1992-09-23&OCCUTYPECD=0&CLINRESU=A01.000&CLINRESUNAME=%25E4%25BC%25A4%25E5%25AF%2592&VILLAGE_NAME=321
+
+PatiInfoController---public ModelAndView rytzd(HttpServletRequest request,HttpServletResponse response)
+
+返回页面：
+ModelAndView modelAndView = new ModelAndView("his/inpatient/inhospreg/rytzd");
+
+问题的2个按钮：
+1、保存
+PatiInfoController---
+public ModelAndView advanceRegistSubmit(HttpServletRequest request,HttpServletResponse response){
+	patiinfo.insertAdvanceRegist(adRegistEntity);
+	
+	此处插入了数据表：HOSP_PATINFO_YYDJ（门诊入院证）
+	
+	
+}
+
+改进方法：
+
+增加查询方法：patiinfo.getAdvanceRegistById(Long.valueOf(regiid));
+增加更新方法：patiinfo.updateAdvanceRegist(adRegistEntity);
+点击“打印入院通知单”的时候，去HOSP_PATINFO_YYDJ（门诊入院证）查询是否已经有记录，如果有，显示记录内容，
+如果没有，则取baseMessage页面数据
+
+保存成功后，不自动关闭页面，需手动关闭
+SVN版本：15862
+
+2、打印（没有onclick方法）
+
+过程太长，9月24日下班完成第一个版本：
+制作报表：rytzd.grf
+增加拼接xml方法：rytzdXML(HttpServletRequest request）
+SVN版本：15868
+
+入院通知单，处理报错问题，在打印页面修改内容后，刷新打印预览内容
+SVN版本：15870
+
+最终结果：
+9月25日版本号：15870
+
+1、重写门诊医生的入院通知单的保存按钮功能，现在可以正常使用，
+2、修改了保存后自动关闭的问题
+3、添加了打印预览窗口，可以直接预览最新的打印效果
+4、解决入院通知单不能打印的问题
+注意：更新云平台，需要重启服务
+
+
+
+
+
+
+
